@@ -11,7 +11,7 @@ app.use(express.json());
 async function connect() {
   try {
     await mongoose.connect(
-      "mongodb+srv://vickznanaware:vickz1866@cluster0.0rmwd6x.mongodb.net/users?"
+      //mongo url
     );
     console.log("db connected");
   } catch (error) {
