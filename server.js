@@ -33,7 +33,7 @@ const users = [];
 
 app.get("/", (req, res) => {
 
-  // res.redirect("http://localhost:3000/createAccount.html");
+ 
   res.send("hii");
 });
 
