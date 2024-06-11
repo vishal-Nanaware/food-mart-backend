@@ -45,13 +45,19 @@ app.post("/signIn", async (req, res) => {
  
  
   if(!userFind){
+    console.log("user not found")
     res.status(401).json({msg:"invalid username"})
+    return 
   }
 
   if(!password == userFind.userPassword){
     res.status(401).json({ msg: "invalid username" });
+    return
   }
-  res.status(200).json({user:userFind.userName})
+
+  res.status(200).json({
+   user:userFind.userName
+  })
 });
 
 //userNamecheck middleware
