@@ -4,7 +4,9 @@ var cors = require("cors");
 const jwt = require("jsonwebtoken");
 const app = express();
 const port = 3000;
-const mongoose = require("mongoose");
+const mongoose = require('mongoose')
+const user = require("./models/user")
+const otp = require("./models/otp")
 require("dotenv").config();
 
 //secrete keys
@@ -26,30 +28,31 @@ async function connect() {
 connect();
 
 //userscheama
-const userScheama = new mongoose.Schema({
-  userName: String,
-  userPassword: String,
-  userEmail: String,
-  otp: { type: mongoose.Schema.Types.ObjectId, ref: "otp" },
-});
+// const userScheama = new mongoose.Schema({
+//   userName: String,
+//   userPassword: String,
+//   userEmail: String,
+//   otp: { type: mongoose.Schema.Types.ObjectId, ref: "otp" },
+// });
 
 //otp scheama
-const otpScheama = new mongoose.Schema({
-  otp: String,
-  createdAt: { type: Date, default: Date.now, expires: 360 },
-});
+// const otpScheama = new mongoose.Schema({
+//   otp: String,
+//   createdAt: { type: Date, default: Date.now, expires: 360 },
+// });
 
 //models are define here
-const user = mongoose.model("user", userScheama);
-const otp = mongoose.model("otp", otpScheama);
+// const user = mongoose.model("user", userScheama);
+// const otp = mongoose.model("otp", otpScheama);
 
 // home route handler. here we cam send {array of item which we can display on the home page}
 app.get("/", (req, res) => {
   res.send("hii");
 });
 
-app.get("/products", async(req,res)=>{
-  let id = req.query.id
+app.post("/products", async(req,res)=>{
+  let id = req.body.quary;
+  console.log(id)
   res.json({id:id})
 })
 //signIn user handler
