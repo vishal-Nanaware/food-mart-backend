@@ -1,4 +1,4 @@
-
+const bcrypt = require("bcrypt");
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const user = require("../models/user");
@@ -7,10 +7,9 @@ const router = express.Router();
 
 // signIn user handler
 
-
-router.get("/", (req ,res)=>{
-    res.send("hi there")
-} )
+router.get("/", (req, res) => {
+  res.send("hi there");
+});
 router.post("/products", async (req, res) => {
   let id = req.body.quary;
   console.log(id);
@@ -27,8 +26,8 @@ router.post("/signIn", async (req, res) => {
     res.status(401).json({ msg: "invalid username" });
     return;
   }
-
-  if (!password == userFind.userPassword) {
+  const match = await bcrypt.compare(password, userFind.userPassword)
+  if (!match) {
     res.status(401).json({ msg: "invalid username" });
     return;
   }
@@ -61,9 +60,12 @@ router.post("/create", userNameCheck, async (req, res) => {
   let password = req.body.password;
   let email = req.body.email;
 
+  let salt = await bcrypt.genSalt(10)
+  let hash = await bcrypt.hash(password, salt)
+
   let newUser = new user({
     userName: username,
-    userPassword: password,
+    userPassword: hash,
     userEmail: email,
   });
 
@@ -108,11 +110,9 @@ router.post("/verify-otp", async (req, res) => {
   let enterOtp = req.body.otp;
   let tokenUser;
   try {
-  
     tokenUser = jwt.verify(temporaryUserToken, process.env.jwtPasswordT);
     console.log(tokenUser);
   } catch (error) {
-  
     return res.status(401).json({ msg: "Invalid or expired token" });
   }
 
@@ -122,7 +122,6 @@ router.post("/verify-otp", async (req, res) => {
       return res.status(400).json({ msg: "Invalid OTP not found" });
     }
     if (fuser.otp.otp === enterOtp) {
-
       fuser.otp = null;
       await fuser.save();
 
@@ -150,9 +149,11 @@ router.post("/changePassword", async (req, res) => {
   }
 
   try {
+    const salt = bcrypt.genSalt(10);
+    const hash = bcrypt.hash(newPassword , salt)
     let updateUser = await user.findOneAndUpdate(
       { userName: verifyUser },
-      { $set: { userPassword: newPassword } }
+      { $set: { userPassword: hash } }
     );
 
     if (!updateUser) {
