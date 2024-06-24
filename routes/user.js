@@ -3,6 +3,8 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const user = require("../models/user");
 const otp = require("../models/otp");
+const zod = require("zod");
+const { z } = zod;
 const router = express.Router();
 
 // signIn user handler
@@ -26,7 +28,7 @@ router.post("/signIn", async (req, res) => {
     res.status(401).json({ msg: "invalid username" });
     return;
   }
-  const match = await bcrypt.compare(password, userFind.userPassword)
+  const match = await bcrypt.compare(password, userFind.userPassword);
   if (!match) {
     res.status(401).json({ msg: "invalid username" });
     return;
@@ -54,14 +56,32 @@ async function userNameCheck(req, res, next) {
     return res.status(500).json({ error: "Database error" });
   }
 }
+
+async function inputValidation(req, res, next) {
+  const { username, password, email } = req.body;
+
+  try {
+    const UserSchema = z.object({
+      username: z.string().min(1, "Username is required"),
+      password: z.string().min(6, "Password must be at least 6 characters"),
+      email: z.string().email("Invalid email address"),
+    });
+
+    UserSchema.parse({ username, password, email });
+    next();
+  } catch (error) {
+    console.error("Validation failed:", error);
+    res.status(401).json({ msg: "Invalid inputs", errors: error.errors });
+  }
+}
 //create user handler
-router.post("/create", userNameCheck, async (req, res) => {
+router.post("/create", inputValidation, userNameCheck, async (req, res) => {
   let username = req.body.username;
   let password = req.body.password;
   let email = req.body.email;
 
-  let salt = await bcrypt.genSalt(10)
-  let hash = await bcrypt.hash(password, salt)
+  let salt = await bcrypt.genSalt(10);
+  let hash = await bcrypt.hash(password, salt);
 
   let newUser = new user({
     userName: username,
@@ -150,7 +170,7 @@ router.post("/changePassword", async (req, res) => {
 
   try {
     const salt = bcrypt.genSalt(10);
-    const hash = bcrypt.hash(newPassword , salt)
+    const hash = bcrypt.hash(newPassword, salt);
     let updateUser = await user.findOneAndUpdate(
       { userName: verifyUser },
       { $set: { userPassword: hash } }

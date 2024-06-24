@@ -1,14 +1,10 @@
-
 const express = require("express");
 var cors = require("cors");
-const jwt = require("jsonwebtoken");
 const app = express();
 const port = 3000;
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 require("dotenv").config();
-const userRouter = require("./routes/user")
-
-
+const userRouter = require("./routes/user");
 
 app.use(cors());
 app.use(express.json());
@@ -24,7 +20,6 @@ async function connect() {
 connect();
 
 app.use("/user", userRouter);
-
 
 app.listen(port, () => {
   console.log(`app listening on port ${port}`);
