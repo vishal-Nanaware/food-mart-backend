@@ -8,15 +8,6 @@ const { z } = zod;
 const router = express.Router();
 
 // signIn user handler
-
-router.get("/", (req, res) => {
-  res.send("hi there");
-});
-router.post("/products", async (req, res) => {
-  let id = req.body.quary;
-  console.log(id);
-  res.json({ id: id });
-});
 router.post("/signIn", async (req, res) => {
   let username = req.body.username;
   let password = req.body.password;
