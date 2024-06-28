@@ -6,6 +6,9 @@ const otp = require("../models/otp");
 const zod = require("zod");
 const { z } = zod;
 const router = express.Router();
+const data = require("../mockdata.json")
+
+
 
 // signIn user handler
 router.post("/signIn", async (req, res) => {
