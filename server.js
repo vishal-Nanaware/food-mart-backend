@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 const userRouter = require("./routes/user");
 const productRouter = require("./routes/product")
+const admin = require("./routes/admin")
 
 app.use(cors());
 app.use(express.json());
@@ -22,6 +23,7 @@ connect();
 
 app.use("/user", userRouter);
 app.use("/product",productRouter);
+app.use("/admin", admin)
 
 app.listen(port, () => {
   console.log(`app listening on port ${port}`);
