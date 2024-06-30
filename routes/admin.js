@@ -1,11 +1,26 @@
 const express = require("express");
-const Router = express.Router();
-const user = require("../models/user");
-const data = require("../mockdata.json")
+const router = express.Router();
+const product = require("../models/product");
+const data = require("../mockdata.json");
+
+router.get("/",async (req, res) => {
+  let  data = await product.find({});
+  res.json({data:data})
+});
+
+router.post("/addproduct", async (req, res) => {
+  const { name, description, category, price, calories } = req.body;
+  let newProduct = new product({
+    productName: name,
+    productCategory: category,
+    productPrice: price,
+    productCalrie: calories,
+    productDescription: description,
+  });
+ await newProduct.save().then(console.log("saved"))
+
+});
 
 
-Router.get("/",(req,res )=>{
-    res.json(data)
-} )
 
-module.exports = Router;
+module.exports = router;
