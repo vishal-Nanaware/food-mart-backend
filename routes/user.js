@@ -3,13 +3,18 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const user = require("../models/user");
 const otp = require("../models/otp");
+const order = require("../models/order")
 const zod = require("zod");
 const { z } = zod;
 const router = express.Router();
 const data = require("../mockdata.json")
 
 
-
+router.post("/order", (req,res)=>{
+  let { token, userOrder } = req.body;
+  console.log(userOrder.productId);
+  res.json({ data: userOrder });
+})
 // signIn user handler
 router.post("/signIn", async (req, res) => {
   let username = req.body.username;

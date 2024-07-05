@@ -9,9 +9,10 @@ router.get("/",async (req, res) => {
   const products =await product.find({})
   res.json(products)
 });
+
 router.post("/ProductId", async (req, res) => {
   const ProductId = req.query.ProductId;
-  
+  console.log(ProductId)
   let item = await product.findById({ _id: ProductId });
   res.json(item);
 });
@@ -26,5 +27,7 @@ router.post("/category",async (req,res)=>{
   }
 
 });
+
+
 
 module.exports = router;
