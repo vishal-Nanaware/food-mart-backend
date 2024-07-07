@@ -1,7 +1,7 @@
 const mongoose = require("mongoose")
 
 const order = new mongoose.Schema({
-    userName:String,
+    userId:String,
     phoneNumber:Number,
     address:String,
     productId:String,
@@ -12,4 +12,4 @@ const order = new mongoose.Schema({
 
 const orders = mongoose.model('order', order)
 
-module.exports = order;
+module.exports = orders;

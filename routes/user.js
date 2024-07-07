@@ -3,24 +3,14 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const user = require("../models/user");
 const otp = require("../models/otp");
-const order = require("../models/order")
+const order = require("../models/order");
 const zod = require("zod");
-const orderValidationSchema = require("../middleware/orderValidation")
+const orderValidationSchema = require("../middleware/orderValidation");
 const { z } = zod;
 const router = express.Router();
-const data = require("../mockdata.json")
+const data = require("../mockdata.json");
 
 
-router.post("/order", orderValidationSchema, (req,res)=>{
-  let { token, userOrder } = req.body;
-  let verifyUser = jwt.verify(token, process.env.jwtPassword);
-  console.log(
-    `userName:${userOrder.name} | userPhone: ${userOrder.phoneNumber} | userAddress: ${userOrder.address} user: ${verifyUser.username} productId:${userOrder.productId} quantity: ${userOrder.formQuaValue}`
-  );
-  res.json({ data: userOrder });
-
-
-})
 // signIn user handler
 router.post("/signIn", async (req, res) => {
   let username = req.body.username;
